@@ -236,7 +236,7 @@
 - **null**
     - 프로그래밍 상에 모든 곳에서 null이라고 사용
     -  파이썬만 None으로 사용
-- [Java문법실습](./Day02/spring05/src/main/java/com/giyun00/spring05/Spring05Application.java)
+- [Java문법실습](./Day02/spring05/src/main/java/com/giyun00/spring06/Spring06Application.java)
 
 #### 객체/클래스
 - 개요
@@ -290,6 +290,7 @@
 
         }
         ```
+
 - 인스턴스(instance)
     - 객체를 만드는 클래스를 new로 새로 생성
     - 두 개의 인스턴스 하나를 가르칠 수 없음
@@ -302,7 +303,7 @@
     // ...
 
     ```
-- [Java문법실습](./Day02/spring06/src/main/java/com/giyun00/spring06/Spring06Application.java)
+- [Java문법실습](./Day02/spring06/src/main/java/com/giyun00/spring07/Spring07Application.java)
 #### 상속
 - 개요
     -  객체지향 중요한 의미의 개념
