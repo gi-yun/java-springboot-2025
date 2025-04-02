@@ -2,6 +2,41 @@
     "configurations": [
         {
             "type": "java",
+            "name": "Spring05Application",
+            "request": "launch",
+            "mainClass": "Day02.spring05.src.main.java.com.giyun00.spring05.Spring05Application",
+            "projectName": "java-springboot-2025_fc26998f"
+        },
+        {
+            "type": "java",
+            "name": "Spring01Application",
+            "request": "launch",
+            "mainClass": "com.giyun00.spring01.Spring01Application",
+            "projectName": "spring05"
+        },
+        {
+            "type": "java",
+            "name": "Spring01Application",
+            "request": "launch",
+            "mainClass": "Day02.spring01.src.main.java.com.giyun00.spring01.Spring01Application",
+            "projectName": "java-springboot-2025_fc26998f"
+        },
+        {
+            "type": "java",
+            "name": "Spring05Application",
+            "request": "launch",
+            "mainClass": "com.giyun00.spring05.Spring05Application",
+            "projectName": "spring05"
+        },
+        {
+            "type": "java",
+            "name": "Spring04Application",
+            "request": "launch",
+            "mainClass": "Day02.spring04.src.main.java.com.giyun00.spring04.Spring04Application",
+            "projectName": "java-springboot-2025_fc26998f"
+        },
+        {
+            "type": "java",
             "name": "Spring03Application",
             "request": "launch",
             "mainClass": "com.giyun03.spring03.Spring03Application",
@@ -31,6 +66,26 @@
             "args": "",
             "envFile": "${workspaceFolder}/.env",
             "vmArgs": " -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=57108 -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Dspring.jmx.enabled=true -Djava.rmi.server.hostname=localhost -Dspring.application.admin.enabled=true -Dspring.boot.project.name=spring01"
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-Spring04Application<spring04>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.giyun00.spring04.Spring04Application",
+            "projectName": "spring04",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-Spring06Application<spring06>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.giyun00.spring06.Spring06Application",
+            "projectName": "spring06",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
         }
     ]
 }
