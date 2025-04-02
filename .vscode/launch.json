@@ -86,6 +86,26 @@
             "projectName": "spring06",
             "args": "",
             "envFile": "${workspaceFolder}/.env"
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-Spring07Application<spring07>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.giyun00.spring07.Spring07Application",
+            "projectName": "spring07",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-Spring08Application<spring08>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.giyun00.spring08.Spring08Application",
+            "projectName": "spring08",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
         }
     ]
 }

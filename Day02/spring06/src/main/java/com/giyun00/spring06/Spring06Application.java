@@ -15,7 +15,6 @@ public class Spring06Application {
 
 		//선언 static 없으면 선언해서 써야함
 		Spring06Application app = new Spring06Application();
-		// test test = new test();
 
 		//Car 클래스 인스턴스 생성
 		Car mycar = new Car(); 
@@ -23,6 +22,7 @@ public class Spring06Application {
 		//메서드
 		// test.testHello();
 		app.printHello();
+		app.testHello();
 		sayHi();
 		
 		if (isEven(3) ==true) {
@@ -65,10 +65,8 @@ public class Spring06Application {
 		}
 	}
 
-	public class test {
-		public void testHello() {
-			System.out.println("Hello, Spring(class선언)");
-		}
+	public void testHello() {
+		System.out.println("Hello, Spring(class선언)");
 	}
 
 
