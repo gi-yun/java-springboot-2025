@@ -106,6 +106,47 @@
             "projectName": "spring08",
             "args": "",
             "envFile": "${workspaceFolder}/.env"
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-Spring09Application<spring09>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.giyun00.spring09.Spring09Application",
+            "projectName": "spring09",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-Spring10Application<spring10>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.giyun00.spring10.Spring10Application",
+            "projectName": "spring10",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-Spring12Application<spring12>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.giyun00.spring12.Spring12Application",
+            "projectName": "spring12",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env",
+            "vmArgs": " -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=59851 -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Dspring.jmx.enabled=true -Djava.rmi.server.hostname=localhost -Dspring.application.admin.enabled=true -Dspring.boot.project.name=spring12"
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-Spring11Application<spring11>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.giyun00.spring11.Spring11Application",
+            "projectName": "spring11",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
         }
     ]
 }
