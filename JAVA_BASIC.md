@@ -353,10 +353,14 @@
     - java.lang.Object
     - Object클래스가 가지고 있는 멤버변수와 메서드는 다 사용가능
 
+- [Java문법실습](./Day02/spring08/src/main/java/com/giyun00/spring08/Spring08Application.java)
+
 #### 추상 클래스
 - 구체적인 내용이 포함되지 않는 클래스
 - 반드시 자식클래스에서 오버라이딩으로 구현
 - 추후 다시 학습요망!
+
+- [Java문법실습](./Day03/spring09/src/main/java/com/giyun00/spring09/Spring09Application.java)
 
 #### 인터페이스
 - 상수와 추상메서드로만 구성된 클래스의 한 형태
@@ -417,13 +421,127 @@
     }
 
     ```
+- [Java문법실습](./Day03/spring10/src/main/java/com/giyun00/spring10/Spring10Application.java)
 #### 객체지향 특징
 - 추가로 학습할 내용
 - 다형성, 상속, 캡슐화, 추상화
 
 
 #### 문자열, 시간타입 핸들링
+- [java.lang.String](https://docs.oracle.com/en/java/javase/24/docs/api/java.base/java/lang/String.html)
 - String
     - 컴퓨터 -> 숫자, 사람 -> 문자
+- [Java문법실습](./Day03/spring12/src/main/java/com/giyun00/spring12/Spring12Application.java)
+
+#### 시간타입 핸들링
+- [java.time](https://docs.oracle.com/en/java/javase/24/docs/api/java.base/java/time/package-summary.html)
+- time
+    - 날짜와 시간을 처리할 때 사용
+
+- [Java문법실습](./Day04/spring13/src/main/java/com/giyun00/spring13/Spring13Application.java)
+
+#### 제네릭
+- 파이썬과 다르게 java는 단일형만 배열이나 컬렉션에서 사용할 수 있음
+- Object 타입으로 지정하면 무슨 형이든 다 할당 가능
+- `다양한 타입의 객체들을 다루는 메서드나 컬렉션 클래스를 컴파일 과정에서 안전하게 타입 체크를 해주는 기능`
+- 장점
+    - 객체 생성시 개발자가 원하는 타입을 지정가능
+    - 타입 안정성 제공
+    - 의도하지 않은 타입의 객체가 저장되는 것을 차단, 오류방지
+    - 형변환의 번거로움이 없음
+
+    ```java
+    class 클래스<T> {
+        T 변수;
+        // getter/setter
+
+    }
+
+    public static void main(String[] args){
+        클래스명<String> 변수명 = new 클래스명<>();
+    }
+    ```
+
+    - T는 가변타입. String, int, double 다 지정가능
+    - T, P, K, TP 등 가변타입의 명칭은 편하게 지정
+
+#### 원시타입의 클래스
+- int, double, float, byte 등 소문자 타입은 C와 같은 예전언어를 배운사람의 편의성을 위해서 추가한 기능
+- Integer, Double, Float, Byte 등 대문자로 시작하는 타입이 진짜 Java 클래스 타입
+- 제네릭을 쓸때는 클래스 타입만 허용
+
+- [Java문법실습](./Day04/spring14/src/main/java/com/giyun/spring14/Spring14Application.java)
+
+#### 자료구조
+- 다수의 데이터를 저장, 관리하기 위한 목적으로 나온것 - 자료구조
+- 배열 : 다수의 데이터를 저장, 관리하기 위해 최초로 개발
+- 배열의 단점을 개선 : 리스트, 맵, 튜플, 딕셔너리, 그래프, 트리...
+- 배열보다 데이터 사이즈는 커지지만 속도는 개선
+- 이런 자료구조를 `Java 컬렉션 프레임워크`라고 지칭
+
+<img src="image/sb002.png" width ="600">
+
+- List : 순서가 있는 데이터 집합. 데이터 중복 허용
+- Set : 순서가 없는 데이터. 데이터 중복 허용x
+- Map : 키와 값의 쌍의 데이터 집합. 순서X, 키중복X, 값중복O
+
+#### Collection 인터페이스
+- List, Queue, Set 인터페이스의 상위 인터페이스
+- 컬렉션 생성시
+
+    ```java
+    ArrayList<String> list = new AraayList<>(); // 권장안함
+    List<String> list = new ArrayList<>(); // 일반적이진 않음
+    Collection<String> list = new ArrayList<>(); // 권장!
+    ```
+- Set 인터페이스
+    - HashSet
+
+- Map 인터페이스
+    - HashMap
+
+[Java문법실습](./Day04/spring15/src/main/java/com/giyun/spring15/Spring15Application.java)
+
+#### 람다식
+- 함수형 프로그래밍 언어의 특징을 객체지향 언어에 녹여넣은 것
+- 익명 함수로 부르기도 함
+- 코드의 간겨성 : 코드 구문이 확 줄어듬
+
+    ```java
+    // 기존방식
+    [접근제어자] 리턴타입 메서드명(매개변수, ...){
+        코드 블럭;
+    }
+
+    //예시
+    public String helloJava() {
+        return "Hello, Java!";
+    }
+
+    // 람다식
+    (매개변수, ...) -> { 코드블럭; }
+
+    // 예시
+    () -> "Hello, Java!"; // 한번 실행되고 끝남.
+
+    ```
+
+
+#### 함수형 인터페이스
+- 객체지향 언어인 Java에서 함수형 처리를 위해서 함수형 인터페이스가 필요
+- 인터페이스 내에 하나의 추상메서드만 갖도록 제한해줌
+- @FunctionalInterface 어노테이션을 사용 권장
+
+
+#### 스트림 API
+- 함수형 인터페이스로 데이터를 추상화하고 처리하는 자주 사용되는 함수를 정의해 놓은것
+- 특징
+    - 원본 데이터를 변경안함
+    - 일회성
+    - 내부 반복으로 작업처리
+
+- 스트림API가 쉽지는 않지만, 코딩량을 현저하게 줄일 수 있음.
+
+- [Java문법실습](/Day04/spring16/src/main/java/com/giyun00/spring16/Spring16Application.java)
 
 

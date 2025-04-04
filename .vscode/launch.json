@@ -2,6 +2,12 @@
     "configurations": [
         {
             "type": "java",
+            "name": "Spring14Application",
+            "request": "launch",
+            "mainClass": "com.giyun.spring14.Spring14Application"
+        },
+        {
+            "type": "java",
             "name": "Spring05Application",
             "request": "launch",
             "mainClass": "Day02.spring05.src.main.java.com.giyun00.spring05.Spring05Application",
@@ -145,6 +151,47 @@
             "cwd": "${workspaceFolder}",
             "mainClass": "com.giyun00.spring11.Spring11Application",
             "projectName": "spring11",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-Spring13Application<spring13>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.giyun00.spring13.Spring13Application",
+            "projectName": "spring13",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-Spring15Application<spring15>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.giyun.spring15.Spring15Application",
+            "projectName": "spring15",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env",
+            "vmArgs": " -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=52555 -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Dspring.jmx.enabled=true -Djava.rmi.server.hostname=localhost -Dspring.application.admin.enabled=true -Dspring.boot.project.name=spring15"
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-Spring16Application<spring16>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.giyun00.spring16.Spring16Application",
+            "projectName": "spring16",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-Spring14Application<spring14>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.giyun.spring14.Spring14Application",
+            "projectName": "spring14",
             "args": "",
             "envFile": "${workspaceFolder}/.env"
         }
