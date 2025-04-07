@@ -194,6 +194,36 @@
             "projectName": "spring14",
             "args": "",
             "envFile": "${workspaceFolder}/.env"
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-Spring17Application<spring17>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.giyun00.spring17.Spring17Application",
+            "projectName": "spring17",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-Spring18Application<spring18>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.giyun00.spring18.Spring18Application",
+            "projectName": "spring18",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-Spring19Application<spring19>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.giyun00.spring19.Spring19Application",
+            "projectName": "spring19",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
         }
     ]
 }

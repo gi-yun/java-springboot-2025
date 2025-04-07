@@ -1,0 +1,8 @@
+${AnsiBackground.BLACK}
+${AnsiColor.RED} _       __     __                             __  ___         _       __     __  
+${AnsiColor.YELLOW}| |     / /__  / /________  ____ ___  ___     /  |/  /_  __   | |     / /__  / /_  
+${AnsiColor.GREEN}| | /| / / _ \/ / ___/ __ \/ __ `__ \/ _ \   / /|_/ / / / /   | | /| / / _ \/ __ \
+${AnsiColor.BLUE}| |/ |/ /  __/ / /__/ /_/ / / / / / /  __/  / /  / / /_/ /    | |/ |/ /  __/ /_/ /
+${AnsiColor.MAGENTA}|__/|__/\___/_/\___/\____/_/ /_/ /_/\___/  /_/  /_/\__, /     |__/|__/\___/_.___/ 
+${AnsiColor.MAGENTA}                                                  /____/                          
+${AnsiBackground.DEFAULT}

@@ -84,6 +84,9 @@
     - Gradle for Java 설치(Extension Pack for Java 설치시 같이 설치됨)
 
 ### Spring Boot 기본 실행(Java 프로젝트)
+- JDK버전과 Spring Boot Initializr에 선택하는 JDK버전이 일치해야
+    - OS에 JDK버전이 17버전이면 17선택
+    
 - VS Code에서 명령팔레트 실행
     - Spring initializr : Create a Maven Project 
     - Specify Spring Boot version: 3.3.10 선택
@@ -172,7 +175,121 @@
     - VS Code 재시작.
 
 ## 5일차
-- 
+- Spring Boot 웹 실행
+    - Spring initializr : Create a Gradle Project 
+    - Specify Spring Boot version: 3.4.4 선택
+    - Specify project language: Java 
+    - Input Group Id : 본인아이디 입력 /com.giyun00
+    - Input Artifact Id : 본인아이디 입력 /spring19
+    - Specify packaging type : Jar(Java archive, 압축파일)
+    - Specify Java version : 17
+    - Choose dependencies : Selected 1 dependencies
+        - Spring Web
+    - 저장위치 선택 
+
+- 기본설정
+    - application.properties에 `spring.output.ansi.enabled=always` 추가
+
+- 포트번호
+
+    |프로토콜|포트번호|비고|
+    |:---|---:|:---:|
+    |HTTP|80|웹 서버, 서비스 포트(보안취약)|
+    |HTTPS|443|SSL을 적용한 웹 서비스(보안강화)|
+    |FTP|21|웹을 통한 파일 전송|
+    |TELNET|23|원격서버접속 서비스|
+    |SSH|22|보안강화된 텔넷|
+    |SMTP|25|메일 전송 서비스|
+
+- 개발용 포트 
+    - 포트는 중복 안됨
+    - 8080포트를 사용 하고 있으면 다른 포트로 변경해야 함!
+    - 포트 변경시 application.properties 에 <예시 : `server.port =8090` >으로 예시처럼 변경
+- 웹 브라우저 열기
+    - http://localhost:8090/ 오픈
+    <img src="./image/sb006-1.png" width="650">
+
+- 접속위치 요청을 처리
+    - 컨트롤러 생성
+        - HelloController 클래스 생성
+<br>
+    - 각 기능별로 패키지를 구분
+        - controller, model, view ... 등
+
+### 로그 출력력
+- Log-back
+    - 스프링부트에 내장된 로그 모듈
+    
+    ```groovy
+    logging.level.root = info
+    logging.file.name = /logtest.log
+    ```
+
+
+    ```java
+    
+    import org.slf4j.Logger; // SLF4J 로거 인터페이스
+    // 클래스 내 작성성
+    private final Logger logger = (Logger) LoggerFactory.getLogger(this.getClass()); // 로거 객체 생성
+
+    // 메서드 내 사용
+    logger.info("hello URL 오픈!"); // 로그에 출력
+    // 문제발생시 로그를 남길때
+    logger.debug("디버그시 필요한 로그에요요"); // 디버그 로그에 출력
+    logger.trace("디버그시 필요한 로그에요"); // 트레이스 로그에 출력
+
+    logger.warn("경고표시 나타내는 로그입니다."); // 경고 로그에 출력
+    logger.error("오류표시 나타내는 로그입니다."); // 에러 로그에 출력
+    ```
+
+### 스프링부트 배너(중요도 없음)
+- resources 폴더에 banner.txt를 생성
+- 내용 추가
+- [Spring Boot Banner Generator](https://devops.datenkollektiv.de/banner.txt/index.html)
+- 배너 제너레이터로 생성한 글자 복사 banner.txt 붙여넣기
+- 서버 재시작
+
+<img src="./image/sb008.png" width="700">
+
+### 메인페이지 추가
+- resources/static/index.html 부터 시작
+
+### 스프링부트 프로젝트 구조
+<img src="./image/sb009.png" width="300">
+
+- 각 폴더 구조
+    - .gradle ~ gradle : 그레이들, VSCode, 빌드 등에 필요한 폴더(설명불필요)
+    - src/main/java : 패키지와 자바 소스가 저장되는 위치
+    - com.giyun00.spring19 : 패키지. 폴더로 구성
+        - HelloController 클래스에 접근하려면,
+        - com.giyun00.spring19.controller.HelloController 접근해야 함.
+    - Spring03Application.java : 시작프로그램.
+    - src/main/resources : 자바파일 이외 HTML, CSS, JS, 환경파일 등 리소스 파일 저장되는 위치
+        - `static` : CSS, JS, 이미지 파일 저장되는 곳
+        - `templates` : 스프링부트랑 연계되는 HTML 파일이 저장되는 곳
+        - `application.properties` : 프로젝트 환경설정 파일. 환경변수, DB 설정
+    - src/test/java : JUnit 스트링부트 테스트도구 자바파일 저장되는 위치
+    - `build.gradle` : 그레이들 환경 파일. Groovy 기반으로 한 빌드 도구. dependencies 만 잘 구성하면 됨.
+    - gradlew.bat : 중간에 직접 그레이들 빌드를 할 때 사용하는 배치파일.
+    - settings.gradle : 고급 그레이들 설정. 손댈일 없음
+
+### 스프링부트 어노테이션
+
+#### @SpringBootApplication
+- 스프링부트 자동구성 매커니즘 활성화
+- 어플리케이션 내 패키지에서 컴포넌트를 스캐닝
+- 설정 클래스 임폴트해서 활성화, 스프링부트 실행
+
+#### @Controller
+- 컴포넌트 구체화해서 해당클래스 Ioc컨테이너 Bean으로 등록
+
+#### @GetMapping
+- Get, Post 중 Get(URL)으로 들어오는 주소를 매핑. 처리해주는 역할
+- @PostMapping, @RequestMapping 등 파악
+
+#### @ResponseBody
+- HTTP 요청의 자바객체가 처리한 body내용을 매핑하는 역할
+- 자바의 String 문자열을 웹페이지에 렌더링.
 
 ## 6일차(06-26)
 
