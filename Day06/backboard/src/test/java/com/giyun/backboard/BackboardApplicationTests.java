@@ -1,6 +1,7 @@
 package com.giyun.backboard;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -82,13 +83,26 @@ class BackboardApplicationTests {
 		System.out.println("모든 게시글이 삭제되었습니다.");
 	}
 
-	@Test
-	void deleteBoardById() {
-		assertEquals(4, boardRepository.count()); // 게시글 개수 확인
-		Optional<Board> opBoard = boardRepository.findById(1L); // ID로 게시글 조회
-		assertEquals(opBoard, deleteBoardById());
+	@Test // 삭제
+	void testDeleteLastOne() {
+		assertEquals(4, boardRepository.count());
+		Optional<Board> opBoard = this.boardRepository.findById(2L);
+		assertTrue(opBoard.isPresent());
 
-		Board board = opBoard.get(); // Optional에서 Board 객체를 꺼냄
-		boardRepository.delete(board); // 게시글 삭제
-		assertEquals(3, boardRepository.count()); // 게시글 개수 확인
+		Board board = opBoard.get();
+		this.boardRepository.delete(board);
+		assertEquals(3, boardRepository.count()); // 한건 지워서 3건 남음
+	}
+
+	@Test
+	void testupdateBoard() {
+		Optional<Board> opBoard = this.boardRepository.findById(1L);
+		assertTrue(opBoard.isPresent());
+
+		Board board = opBoard.get(); // Optional에서 null이 아닌 Board 객체를 꺼냄
+		board.setContent("내용이 테스트에서 변경되었습니다.");
+
+		this.boardRepository.save(board); // 변경된 내용을 저장
+
+	}
 }

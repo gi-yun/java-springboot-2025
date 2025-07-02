@@ -22,3 +22,7 @@
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
 replay_pid*
+
+# Bootstrap distribution files
+**/bootstrap-5.3.7-dist/
+**/bootstrap-icons-1.13.1
