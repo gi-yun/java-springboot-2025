@@ -13,7 +13,7 @@ import com.pknu.backboard.repository.BoardRepository;
 import lombok.RequiredArgsConstructor;
 
 @Service
-@RequiredArgsConstructor
+@RequiredArgsConstructor 
 public class BoardService {
 
     @Autowired
@@ -25,8 +25,8 @@ public class BoardService {
     }
 
     // SELECT * FROM board WHERE bno = ?
-    public Board getBoardOne(Long bno) {
-        Optional<Board> opBoard = this.boardRepository.findById(bno);
+    public Board getBoardOne(Long bno) { 
+        Optional<Board> opBoard = this.boardRepository.findById(bno);  
         if (opBoard.isPresent()) {
             return opBoard.get();
         } else {
@@ -34,12 +34,13 @@ public class BoardService {
         }
     }
 
-    // INSERT INTO board (title, content) VALUES (?, ?)
-    public void setBoardCreate(String title, String content) {
+    // INSERT INTO board VALUES ...
+    public void setBoardOne(String title, String content) {
         Board board = new Board();
-        board.setTitle(title);
-        board.setContent(content);
-        board.setCreateDate(LocalDateTime.now());
-        this.boardRepository.save(board); // INSERT INTO board (title, content) VALUES (?, ?)
+        board.setTitle(title);  // 파라미터로 넘어온 변수를 파라미터로 입력
+        board.setContent(content);  // 내용도 마찬가지
+        board.setCreateDate(LocalDateTime.now()); 
+
+        this.boardRepository.save(board);
     }
 }
