@@ -54,6 +54,38 @@
 
   - Java, 개발툴, 데이터베이스
 
+- 중요점
+
+  - JPA가 최신 기술이기 때문에 Oracle 11g 이전 DB와는 사용하는 쿼리가 완전 다름
+  - JPA 기능 : 쿼리 작성하지 않고 JPA가 자동으로 쿼리를 생성하고 실행
+  - 게시판 페이징 사용 시
+
+    - 최신버전 : OFFSET, FETCH 키워드 사용 가능
+
+    ```sql
+    SELECT *
+      FROM board
+     ORDER BY create_date DESC
+    OFFSET 20 ROWS FETCH NEXT 10 ROWS ONLY;
+    ```
+
+    - Oracle 11g 이하에서는 OFFSET, FETCH 키워드 사용 불가. 서브쿼리 rownum을 사용해서 페이징 쿼리 작성
+
+    ```sql
+    SELECT *
+      FROM (
+          SELECT inner_query.*, ROWNUM rnum
+          FROM (
+              SELECT * FROM board
+              ORDER BY create_date DESC
+          ) inner_query
+          WHERE ROWNUM <= 30
+      )
+      WHERE rnum >= 21;
+    ```
+
+  - `결론` : **Spring Boot에서 JPA를 사용하려면 Oracle 12 이상**은 사용해야 함
+
 - Java
 
   - Java Runtime과 JDK(Java Developer Kit) 존재
@@ -462,7 +494,8 @@
 
    5. MVC 패턴에 맞춰 각 기능별로 패키지(폴더) 생성
 
-      - controller, entity, repository, ...
+      - entity, repository, service, controller ...
+      - templates 내 html
 
    6. @(Annotation) 정리
 
@@ -473,9 +506,9 @@
         - `@Entity` : 테이블화 할 객체 선언
         - @Id : 테이블 PK
         - @GeneratedValue(strategy = GenerationType.SEQUENCE)
-          - AUTO : MySQL Auto Increment
-          - IDENTITY : SQLServer Identity(1, 1)
-          - SEQUENCE : Oracle Sequence
+          - AUTO : JPA가 자동 선별. 사용 지양
+          - `IDENTITY` : SQLServer Identity(1, 1), MySQL Auto-Increment
+          - `SEQUENCE` : Oracle Sequence
           - H2 DB를 오라클 타입으로 사용하고, 나중에 운영DB를 오라클로 갈아타겠다!
       - @Column : 컬럼의 속성을 변경 (ex: @Column(name="subject", length = 250))
         - name : DB상의 실제 컬럼명을 엔티티와 다르게 사용할 때
@@ -590,7 +623,7 @@
 
       ```gradle
       // Thymeleaf layout 의존성 추가. 250701. 신규추가. Hugo.
-      implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect'
+        implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect'
       ```
 
    2. 레이아웃 템플릿 페이지 작성
@@ -602,14 +635,14 @@
 
 ### 스프링부트 Backboard 프로젝트(계속)
 
-3. DB연동 개발
+1. DB연동 개발
 
    1. 게시글 등록 기능
    2. Spring Boot Validation 기능 추가 : 입력 검증
 
       ```gradle
       // 추가 의존성
-      implementation 'org.springframework.boot:spring-boot-starter-validation'
+        implementation 'org.springframework.boot:spring-boot-starter-validation'
       ```
 
       - Annotation으로 검증 수행
@@ -620,6 +653,310 @@
    4. BoardForm 객체를 컨트롤러에 전달
    5. board_create.html에 입력검증 태그, 속성 등 추가
 
-      - GetMethod, PostMethod에 BoardForm 파라미터를 추가!
+      - GetMapping, PostMapping 메서드에 BoardForm 파라미터를 추가!
 
-   6. board_detail.html에 댓글 입력 검증
+   6. board_detail.html에 댓글 입력 검증 태그 추가
+
+      - ReplyController 의 PostMapping 메서드에 ReplyForm을 파라미터로 추가
+      - BoardController의 GetMapping 메서드에 ReplyForm을 @Valid 파라미터로 추가
+
+   7. 검증영역 태그를 valid_error.html 템플릿 생성
+
+2. Bootstrap 템플릿 사이트
+
+   - https://startbootstrap.com/
+   - https://bootstrapmade.com/bootstrap-5-templates/
+   - https://mdbootstrap.com/freebies/
+   - https://bootstrapmade.com/
+   - https://www.youtube.com/@codehal (No Bootstrap)
+
+3. Bootstrap Navigation 구현
+
+   - templates/layout.html 네비게이션 태그 작성
+
+4. Paging : 대량 데이터 로드시 속도 개선
+
+   - Dummy Data 생성 : Unit 테스트로 대략 200건 입력
+   - Page, Pageable 인터페이스
+
+     ```java
+     import org.springframework.data.domain.Page;
+     import org.springframework.data.domain.Pageable;
+     ```
+
+   - BoardRepository 인터페이스에 페이징용 findAll() 재정의
+   - BoardService 클래스에 페이징용 getBoardList() 오버로딩 작성
+   - BoardController 클래스에 getList()에 페이징 파라미터 추가
+   - board_list.html에 페이징 컨트롤 추가
+
+       <img src="./image/sb0015.png" width="600">
+
+   - 페이징번호가 모두 표시되는 문제 발생
+
+## 9일차
+
+### 스프링부트 Backboard 프로젝트(계속)
+
+1. 게시판 작업
+
+   1. Paging 구현 계속
+
+      - 페이지수가 10개 안넘도록 처리
+      - 이전페이지, 다음페이지 사용여부 변경
+      - 맨첫페이지, 마지막페이지 버튼 추가
+
+   2. 게시글 최신 글부터 나오도록 정렬
+
+      1. BoardService getBoardList() 메서드에 정렬로직 추가
+
+   3. 게시글 개수만큼 번호가 나오도록 수정
+
+      1. 현재는 각 페이지마다 1~10까지 반복
+      2. 게시물번호 = 전체 게시물개수 - (현재페이지번호 \* 10[페이지당 게시글 수]) - 페이지당 인덱스
+      3. board_list.html의 `<td th:text="${index.count}"></td>` 를 수정
+
+   4. Bootstrap 배지로 각 게시글마다 댓글개수 표시
+
+      - MyBatis로 작업된 Spring Boot : 쿼리변경, 도메인변경, html까지 세군데 수정
+      - JPA로 작업된 Spring Boot : html만 수정하면 끝!!!
+      - board_list.html의 제목 태그에 추가
+
+      <img src="./image/sb0016.png" width="600" height="350">
+
+2. Spring Boot Security : 회원가입, 로그인 등을 손쉽게 개발하도록 도와주는 의존성 라이브러리
+
+   1. 시큐리티 설치
+
+      ```gradle
+      // 스프링부트 시큐리티 의존성
+      implementation 'org.springframework.boot:spring-boot-starter-security'
+      implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6'
+      ```
+
+   2. 로그인 화면 및 H2 DB 사용불가
+      - 기본사용자 : user
+      - 패스워드 : Spring Boot 로그에 표시(ex: e197e2f2-6d99-4296-b3c3-5eef0e2aefb7)
+   3. 스프링 시큐리티 설정
+
+      1. /security/SecurityConfig 클래스 생성
+
+   4. 웹 보안용어
+
+      - CORS : Cross-Origin Resource Sharing
+        - 기본적으로 서로 다른 오리진(웹서버)인 경우 리소스를 서로 사용할 수 없음
+      - CSRF : Cross-Site Request Forgery
+        - 명시적인 동의 없이 사용자를 대신해서 웹 앱이 악의적인 행동을 취하는 공격
+
+   5. 스프링 시큐리티 설정 (계속)
+
+      1. SecurityConfig 클래스 내 filterChain 메서드에 CSRF 등 관련 설정 추가
+
+   6. 회원가입 구현
+
+      1. Member 엔티티 클래스 작성
+      2. MemberRepository 인터페이스 작성
+      3. MemberService 클래스 작성
+      4. MemberForm 클래스 작성
+      5. MemberController 클래스 작성
+      6. templates/signup.html 작성
+
+   7. MainController에 URL / 관련 메서드 작업
+
+      - @GetMapping("/")
+
+   8. 중복회원 방지 처리
+
+      1. MemberRepository 커스텀 메서드 추가
+      2. MemberService 중복여부 체크 메서드 추가
+      3. MemberController, setSignUp 메서드 수정
+
+   9. 회원 로그인
+      1. SecurityConfig 클래스에 로그인관련 filterChain 추가
+
+## 10일차
+
+### 스프링부트 Backboard 프로젝트(계속)
+
+2. Spring Boot Security (계속)
+
+   1. 회원 로그인
+
+      1. MemberRole enum : 스프링 시큐리티에서 역할분배(Admin, User)
+      2. MemberSecurityService : 스프링 시큐리티를 사용하는 로그인 서비스
+         - UserDetailsService 스프링 시큐리티 인터페이스를 구현
+      3. SecurityConfig 계정관련 메서드 추가
+      4. signin.html
+      5. MemberController 에 GetMapping 메서드 작업
+
+   2. 로그인 오류 처리
+
+      1. SecurityConfig 클래스에 BCryptPasswordEncoder 생성메서드 추가
+      2. MemberService 의 setMember() 패스워드 인코딩시 사용변경
+
+   3. 회원 로그아웃 기능
+      1. layout.html 네비게이션 메뉴 signin, signout 태그 분리
+      2. SecurityConfig 클래스 filterChain() 메서드 내 logout 관련 설정
+
+3. 개발용 H2 데이터베이스 -> Oracle로 이전
+
+   1. build.gradle 에 의존성 추가
+
+      ```gradle
+      runtimeOnly 'com.oracle.database.jdbc:ojdbc11'   // 운영용 Oracle
+      ```
+
+   2. application.properties에 Oracle 연동관련 설정 추가
+
+      ```properties
+      ## Oracle 설정
+      spring.datasource.url=jdbc:oracle:thin:@localhost:1521:XE
+      spring.datasource.driver-class-name=oracle.jdbc.OracleDriver
+      spring.datasource.username=madang
+      spring.datasource.password=madang
+
+      ## JPA DB 설정
+      # H2용
+      # spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.H2Dialect
+      spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.OracleDialect
+      ```
+
+4. 도커에 Oracle 21c XE 설치
+
+   - 11g 사용중 1521포트 사용 중인 상태에서 도커로 21c 설치
+
+     ```shell
+     > docker pull gvenzl/oracle-xe:21
+     ...
+     > docker run -d --name oracle-21-xe -p 11521:1521 -p 8989:8989 -e ORACLE_PASSWORD=oracle gvenzl/oracle-xe:21
+     ```
+
+   - Oracle 21 도커 터미널 접근. DB 생성
+
+     ```shell
+     > docker exec -it oracle-21-xe bash
+     bash-4.4$ sqlplus / as sysdba
+     SQL> create user backboard identified by 12345;
+     User created.
+     SQL> grant connect, resource to backboard;
+     Grant succeeded.
+     SQL> alter user backboard QUOTA UNLIMITED ON USERS;
+     User altered.
+     ```
+
+5. DB 테이블 연동 작업
+
+   1. Board에 글쓴이 컬럼 추가
+
+      1. Board에 Member 클래스변수 추가
+      2. BoardService setBoardOne()에 사용자 Member 파라미터 추가
+      3. MemberService getMember() 메서드 추가
+      4. BoardController setCreate() 메서드 내 서비스 setBoardOne() 메서드에 Principle 추가 수정
+      5. 계정세션이 없는 상태에서 작성을 하면 예외발생 - BoardController 계정관련 어노테이션 `@PreAuthorize` 추가
+      6. SecurityConfig에 계정세션 접근권한 어노테이션 `@EnableMethodSecurity` 추가
+      7. board_list.html 에 작성자 표시 태그 추가
+      8. board_detail.html 에 작성자 표시 태그 추가
+
+   2. Reply에 글쓴이 컬럼 추가
+
+      1. Reply에 Member 클래스 변수 추가
+      2. ReplyService에 사용자 Member 파라미터 추가
+      3. ReplyController setReply() Principle 추가
+      4. ReplyController @PreAuthorize 추가
+      5. board_detail.html 댓글부분에 계정관련 태그, 작성자 표시 태그 추가
+
+   3. Board 게시글 수정, 삭제 추가
+      1. board_detail.html 수정, 삭제 버튼 추가
+      2. BoardService에 게시글 수정메서드 putBoardOne(), 삭제메서드 deleteBoardOne() 추가
+      3. BoardController에 게시글 수정 GetMapping 메서드 추가
+      4. board_create.html th:action을 삭제, 등록과 수정을 동시에 처리할 수 있는 hidden태그를 작성
+      5. BoardController에 수정 PostMapping 메서드 추가
+
+https://github.com/user-attachments/assets/6c18f07c-a836-4d91-9f1c-8ff51d7b8fdb
+
+## 11일차
+
+### 스프링부트 Backboard 프로젝트(계속)
+
+1. VS Code 재설치시 삭제해야할 폴더
+
+   - VS Code 제거
+   - C:/Users/계정/.vscode : 플러그인 등 구성
+   - C:/Users/계정/AppData/Roaming/Code : 전체설정, 백업, 캐시 등 가장 큰 폴더
+   - VS Code 재설치
+
+2. DB 테이블 연동 작업 (계속)
+
+   1. board_detail.html 수정일자 표시
+   2. Board 게시글 삭제 추가
+      1. board_detail.html 삭제 버튼 추가
+      2. ~~BoardRepository에 삭제처리 로직 추가 필요없음~~
+      3. BoardService에 삭제처리 로직 추가
+      4. BoardController에 삭제처리 GetMapping 추가
+
+3. 댓글에 대한 수정, 삭제
+   - 게시판과 동일하게 작성하면 됨
+4. 좋아요 기능 추가
+
+   1. Board Entity에 `Set<Member> like` 속성 추가
+   2. board_detail.html 좋아요 버튼 추가
+   3. BoardService like 관련 메서드 추가
+   4. BoardController 에서 /board/like/{bno} GetMapping 추가
+   5. Reply Entity에 `Set<Member> like` 속성 추가
+   6. board_detail.html 댓글 부분에 좋아요 버튼 추가
+   7. ReplyService 답변가져오기 메서드 getReply() 추가
+   8. ReplyService like 관련 메서드 추가
+   9. ReplyController 에서 /reply/like/{rno} GetMapping 추가
+
+5. 커스텀 에러페이지 처리
+
+   1. application.properties 에서 Whitelabel Error 설정 해제
+   2. templates/error/500.html 생성
+   3. 템플릿 사이트
+      - https://freefrontend.com/html-404-templates/
+      - https://freefrontend.com/html-500-templates/
+
+6. 웹 html 에디터 적용
+
+   1. HTML 에디터 종류
+      - https://ckeditor.com/ckeditor-5/ : 전세계에서 가장 유명한 유무료 웹에디터
+      - https://alex-d.github.io/Trumbowyg/ : jQuery가 필요한 간단한 무료 웹에디터
+      - https://summernote.org/ : 정말 간단한 웹에디터
+      - https://simplemde.com/ : 마크다운만 사용하는 웹에디터
+   2. Trumbowyg 적용
+
+      1. jQuery CDN 적용
+      2. layout.html에 trumbowyg 관련 css, js 링크 추가
+      3. board_create.html에 content textarea와 관련된 스크립트 작성
+      4. 추가 플러그인 js 링크 추가
+
+      <img src="./image/sb0017.png" width="600">
+
+7. 게시판 검색 기능 추가
+
+   1. `@Query` : DATA JPA Query annnotation, JPA 상에서 SQL쿼리와 유사한 방식으로 부가적인 기능을 만들고자할 때 사용. 표준 SQL이 아니라서 DBeaver, MySQL Workbench등에서 사용불가
+   2. BoardRepository 에 JPA Query 어노테이션 사용 메서드 추가
+   3. BoardService 에 getBoardList() 변경
+   4. BoardController 에 getList() 키워드 파라미터 추가
+   5. board_list.html 검색부분 추가
+
+   ## 12일차
+
+   ### 스프링부트 Backboard 프로젝트(계속)
+
+   1. 현재 게시판 검색 중 발생 문제
+
+   - Board의 content 변수(테이블컬럼), Column(length = 8000) 인 경우
+   - Oracle에서 컬럼 타입이 CLOB(Character Large OBjecct) 로 생성
+   - CLOB : 최대 2GB 텍스트 데이터 저장가능 대용량 저장 가능
+   - 단, WHERE LIKE 문 사용불가
+   - 해결방법
+
+   1.
+
+8. 나중에 추가해야할 부분
+
+   1. [ ] 회원가입 후 바로 로그인되는 기능
+   2. [ ] 로그인한 사람 표시기능
+   3. [ ] 테마(라이트, 다크)
+   4. [ ] 파일 업로드
+   5. [ ] 부트스트랩 프리테마로 변경
