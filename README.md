@@ -629,7 +629,11 @@
    2. 레이아웃 템플릿 페이지 작성
    3. board_list.html 에 적용
 
-      https://github.com/user-attachments/assets/e34d7247-6812-448f-b198-fd0b3896a657
+     
+
+    https://github.com/user-attachments/assets/775eeb97-d9e6-4ce4-9764-184ab8d4d3bf
+
+
 
 ## 8일차
 
