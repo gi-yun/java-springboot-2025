@@ -1,213 +1,105 @@
-<!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>페이지 오류!</title>
-    <link rel="stylesheet" type="text/css" th:href="@{/error.css}" />
-  </head>
-  <body>
-    <div class="container">
-      <div class="error">
+<html layout:decorate="~{layout}">
+  <div layout:fragment="content">
+    <!-- Page Title -->
+    <div
+      class="page-title dark-background"
+      style="background-image: url(../../static/img/education/showcase-1.webp)"
+    >
+      <div class="container position-relative">
         <h1>404</h1>
-        <h2>error</h2>
         <p>
-          Page Not found
+          페이지가 없습니다. 잘못된 접근이므로 확인해주세요.
         </p>
-        <a th:href="@{/}" class="btn green">HOME</a>
-      </div>
-      <div class="stack-container">
-        <div class="card-container">
-          <div
-            class="perspec"
-            style="--spreaddist: 125px; --scaledist: 0.75; --vertdist: -25px"
-          >
-            <div class="card">
-              <div class="writing">
-                <div class="topbar">
-                  <div class="red"></div>
-                  <div class="yellow"></div>
-                  <div class="green"></div>
-                </div>
-                <div class="code">
-                  <ul></ul>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="card-container">
-          <div
-            class="perspec"
-            style="--spreaddist: 100px; --scaledist: 0.8; --vertdist: -20px"
-          >
-            <div class="card">
-              <div class="writing">
-                <div class="topbar">
-                  <div class="red"></div>
-                  <div class="yellow"></div>
-                  <div class="green"></div>
-                </div>
-                <div class="code">
-                  <ul></ul>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="card-container">
-          <div
-            class="perspec"
-            style="--spreaddist: 75px; --scaledist: 0.85; --vertdist: -15px"
-          >
-            <div class="card">
-              <div class="writing">
-                <div class="topbar">
-                  <div class="red"></div>
-                  <div class="yellow"></div>
-                  <div class="green"></div>
-                </div>
-                <div class="code">
-                  <ul></ul>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="card-container">
-          <div
-            class="perspec"
-            style="--spreaddist: 50px; --scaledist: 0.9; --vertdist: -10px"
-          >
-            <div class="card">
-              <div class="writing">
-                <div class="topbar">
-                  <div class="red"></div>
-                  <div class="yellow"></div>
-                  <div class="green"></div>
-                </div>
-                <div class="code">
-                  <ul></ul>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="card-container">
-          <div
-            class="perspec"
-            style="--spreaddist: 25px; --scaledist: 0.95; --vertdist: -5px"
-          >
-            <div class="card">
-              <div class="writing">
-                <div class="topbar">
-                  <div class="red"></div>
-                  <div class="yellow"></div>
-                  <div class="green"></div>
-                </div>
-                <div class="code">
-                  <ul></ul>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="card-container">
-          <div
-            class="perspec"
-            style="--spreaddist: 0px; --scaledist: 1; --vertdist: 0px"
-          >
-            <div class="card">
-              <div class="writing">
-                <div class="topbar">
-                  <div class="red"></div>
-                  <div class="yellow"></div>
-                  <div class="green"></div>
-                </div>
-                <div class="code">
-                  <ul></ul>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+        <nav class="breadcrumbs">
+          <ol>
+            <li><a th:href="@{/}">Home</a></li>
+            <li class="current">404</li>
+          </ol>
+        </nav>
       </div>
     </div>
+    <!-- End Page Title -->
 
-    <script>
-      const stackContainer = document.querySelector(".stack-container");
-      const cardNodes = document.querySelectorAll(".card-container");
-      const perspecNodes = document.querySelectorAll(".perspec");
-      const perspec = document.querySelector(".perspec");
-      const card = document.querySelector(".card");
+    <!-- Error 404 Section -->
+    <section id="error-404" class="error-404 section">
+      <div class="container" data-aos="fade-up" data-aos-delay="100">
+        <div class="error-wrapper">
+          <div class="row align-items-center">
+            <div class="col-lg-6" data-aos="fade-right" data-aos-delay="200">
+              <div class="error-illustration">
+                <i class="bi bi-exclamation-triangle-fill"></i>
+                <div class="circle circle-1"></div>
+                <div class="circle circle-2"></div>
+                <div class="circle circle-3"></div>
+              </div>
+            </div>
+            <div class="col-lg-6" data-aos="fade-left" data-aos-delay="300">
+              <div class="error-content">
+                <span
+                  class="error-badge"
+                  data-aos="zoom-in"
+                  data-aos-delay="400"
+                  >Error</span
+                >
+                <h1 class="error-code" data-aos="fade-up" data-aos-delay="500">
+                  404
+                </h1>
+                <h2 class="error-title" data-aos="fade-up" data-aos-delay="600">
+                  Page Not Found
+                </h2>
+                <p
+                  class="error-description"
+                  data-aos="fade-up"
+                  data-aos-delay="700">
+                  찾으시는 페이지가 삭제되었거나, 이름이 변경되었거나, 일시적으로 사용할 수 없는 것 같습니다.
+                </p>
 
-      let counter = stackContainer.children.length;
+                <div
+                  class="error-actions"
+                  data-aos="fade-up"
+                  data-aos-delay="800"
+                >
+                  <a href="/" class="btn-home">
+                    <i class="bi bi-house-door"></i> Back to Home
+                  </a>
+                  <a href="#" class="btn-help">
+                    <i class="bi bi-question-circle"></i> Help Center
+                  </a>
+                </div>
 
-      //function to generate random number
-      function randomIntFromInterval(min, max) {
-        return Math.floor(Math.random() * (max - min + 1) + min);
-      }
-
-      //after tilt animation, fire the explode animation
-      card.addEventListener("animationend", function () {
-        perspecNodes.forEach(function (elem, index) {
-          elem.classList.add("explode");
-        });
-      });
-
-      //after explode animation do a bunch of stuff
-      perspec.addEventListener("animationend", function (e) {
-        if (e.animationName === "explode") {
-          cardNodes.forEach(function (elem, index) {
-            //add hover animation class
-            elem.classList.add("pokeup");
-
-            //add event listner to throw card on click
-            elem.addEventListener("click", function () {
-              let updown = [800, -800];
-              let randomY = updown[Math.floor(Math.random() * updown.length)];
-              let randomX = Math.floor(Math.random() * 1000) - 1000;
-              elem.style.transform = `translate(${randomX}px, ${randomY}px) rotate(-540deg)`;
-              elem.style.transition = "transform 1s ease, opacity 2s";
-              elem.style.opacity = "0";
-              counter--;
-              if (counter === 0) {
-                stackContainer.style.width = "0";
-                stackContainer.style.height = "0";
-              }
-            });
-
-            //generate random number of lines of code between 4 and 10 and add to each card
-            let numLines = randomIntFromInterval(5, 10);
-
-            //loop through the lines and add them to the DOM
-            for (let index = 0; index < numLines; index++) {
-              let lineLength = randomIntFromInterval(25, 97);
-              var node = document.createElement("li");
-              node.classList.add("node-" + index);
-              elem
-                .querySelector(".code ul")
-                .appendChild(node)
-                .setAttribute("style", "--linelength: " + lineLength + "%;");
-
-              //draw lines of code 1 by 1
-              if (index == 0) {
-                elem
-                  .querySelector(".code ul .node-" + index)
-                  .classList.add("writeLine");
-              } else {
-                elem
-                  .querySelector(".code ul .node-" + (index - 1))
-                  .addEventListener("animationend", function (e) {
-                    elem
-                      .querySelector(".code ul .node-" + index)
-                      .classList.add("writeLine");
-                  });
-              }
-            }
-          });
-        }
-      });
-    </script>
-  </body>
+                <div
+                  class="error-suggestions"
+                  data-aos="fade-up"
+                  data-aos-delay="900"
+                >
+                  <h3>You might want to:</h3>
+                  <ul>
+                    <li>
+                      <a href="#"
+                        ><i class="bi bi-arrow-right-circle"></i> Check our
+                        sitemap</a
+                      >
+                    </li>
+                    <li>
+                      <a href="#"
+                        ><i class="bi bi-arrow-right-circle"></i> Contact
+                        support</a
+                      >
+                    </li>
+                    <li>
+                      <a href="#"
+                        ><i class="bi bi-arrow-right-circle"></i> Return to
+                        previous page</a
+                      >
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- /Error 404 Section -->
+  </div>
 </html>

@@ -1,6 +1,5 @@
 package com.pknu.backboard.service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -13,7 +12,7 @@ import com.pknu.backboard.repository.BoardRepository;
 import lombok.RequiredArgsConstructor;
 
 @Service
-@RequiredArgsConstructor
+@RequiredArgsConstructor 
 public class BoardService {
 
     @Autowired
@@ -25,21 +24,12 @@ public class BoardService {
     }
 
     // SELECT * FROM board WHERE bno = ?
-    public Board getBoardOne(Long bno) {
-        Optional<Board> opBoard = this.boardRepository.findById(bno);
+    public Board getBoardOne(Long bno) { 
+        Optional<Board> opBoard = this.boardRepository.findById(bno);  
         if (opBoard.isPresent()) {
             return opBoard.get();
         } else {
             throw new RuntimeException("board not found");
         }
-    }
-
-    // INSERT INTO board (title, content) VALUES (?, ?)
-    public void setBoardCreate(String title, String content) {
-        Board board = new Board();
-        board.setTitle(title);
-        board.setContent(content);
-        board.setCreateDate(LocalDateTime.now());
-        this.boardRepository.save(board); // INSERT INTO board (title, content) VALUES (?, ?)
     }
 }

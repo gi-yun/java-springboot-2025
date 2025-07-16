@@ -629,12 +629,6 @@
    2. 레이아웃 템플릿 페이지 작성
    3. board_list.html 에 적용
 
-     
-
-    https://github.com/user-attachments/assets/775eeb97-d9e6-4ce4-9764-184ab8d4d3bf
-
-
-
 ## 8일차
 
 ### 스프링부트 Backboard 프로젝트(계속)
@@ -936,31 +930,485 @@ https://github.com/user-attachments/assets/6c18f07c-a836-4d91-9f1c-8ff51d7b8fdb
       <img src="./image/sb0017.png" width="600">
 
 7. 게시판 검색 기능 추가
-
    1. `@Query` : DATA JPA Query annnotation, JPA 상에서 SQL쿼리와 유사한 방식으로 부가적인 기능을 만들고자할 때 사용. 표준 SQL이 아니라서 DBeaver, MySQL Workbench등에서 사용불가
    2. BoardRepository 에 JPA Query 어노테이션 사용 메서드 추가
    3. BoardService 에 getBoardList() 변경
    4. BoardController 에 getList() 키워드 파라미터 추가
    5. board_list.html 검색부분 추가
 
-   ## 12일차
+## 12일차
 
-   ### 스프링부트 Backboard 프로젝트(계속)
+### 스프링부트 Backboard 프로젝트(계속)
 
-   1. 현재 게시판 검색 중 발생 문제
+1. 현재 게시판 검색 중 발생 문제
 
-   - Board의 content 변수(테이블컬럼), Column(length = 8000) 인 경우
-   - Oracle에서 컬럼 타입이 CLOB(Character Large OBjecct) 로 생성
-   - CLOB : 최대 2GB 텍스트 데이터 저장가능 대용량 저장 가능
+   - Board의 content 변수(테이블 컬럼), Column(length = 8000) 인 경우
+   - Oracle에서 컬럼 타입이 CLOB(Character Large OBject) 로 생성
+   - CLOB : 최대 2GB 텍스트 데이터 저장가능. 대용량 저장 가능
    - 단, WHERE LIKE 문 사용불가
+   - Query annotation에서 `select distinct`를 사용하면 CLOB 컬럼 조회와 충돌발생
    - 해결방법
+     1. Oracle Text : 검색용 인덱스를 추가 생성. JPA Native query로 CONTAINS() 함수 사용
+     2. ElasticSearch : 외부 서비스 사용해서 검색을 최적화. 도커에 엘라스틱서치 설치, 연동
+     3. 검색용 필드 추가 : VARCHAR(4000) 검색용 필드 content_search 컬럼 추가생성. content에서 html 태그 제거, 검색가능 단어만 저장하는 컬럼
 
-   1.
+2. 게시판 검색 (계속)
 
-8. 나중에 추가해야할 부분
+   1. BoardRepository findAllByKeyword의 `@Query` 를 편집. reply 제거, distinct 키워드 제거
+   2. 11일차 게시판 검색 기능 추가와 동일
+   3. board_list.html 검색부분, form 히든영역, javascript 추가
 
-   1. [ ] 회원가입 후 바로 로그인되는 기능
-   2. [ ] 로그인한 사람 표시기능
-   3. [ ] 테마(라이트, 다크)
-   4. [ ] 파일 업로드
-   5. [ ] 부트스트랩 프리테마로 변경
+3. 파일업로드
+   1. Board Entity에 파일업로드 관련 변수 -> 컬럼
+   2. BoardController 게시글 저장 메서드에 파일업로드 로직 추가
+   3. BoardService setBoardOne() 메서드 수정
+   4. application.properties 에 파일 업로드 위치 설정
+   5. board_create.html에 파일업로드 입력 + form 태그 enctype 속성 추가
+   6. board_detail.html에 파일다운로드 링크 추가
+   7. BoardController에 파일 다운로드 GetMapping 메서드 추가
+   8. 게시글 수정 시 업로드 관련 처리
+      - BoardForm 클래스에 파일업로드 관련 필드 추가(Board 엔티티와 동일)
+   9. BoardController 수정관련 GetMapping 메서드에 로직추가
+   10. BoardService putBoardOne() 메서드에 파일관련 파라미터 추가, 로직 수정
+   11. 파일업로드 사이즈 설정 - application.properties
+   12. 파일업로드시 파일명에 한글이 있으면 문제발생! - 한글을 UTF로 인코딩해서 저장
+
+## 13일차
+
+### 스프링부트 Backboard 프로젝트(계속)
+
+- 시맨틱웹
+  - 웹사이트의 화면 구성을 쉽게 알수 있도록 특수 태그형태의 기술
+  - 특수태그 : header, main, section, article, aside, footer
+
+1. 부트스트랩 프리테마 NiceSchool로 변경
+
+   1. 초기 작업
+      1. assets 폴더 복사해오기
+      2. favicon 커스터마이징
+      3. 구글폰트 구성
+      4. 3rd party vendor 라이브러리 css, head내 구성
+      5. 메뉴 부분 header 태그 복사
+      6. main 태그를 th:block과 동일하게 사용 class="main"
+      7. footer 태그 아래는 복사, src 주소 변경
+      8. header > nav 메뉴, 주소 변경
+   2. Index 페이지 관련 이전
+
+      1. 타임리프 태그 아래에 이전
+
+         ```html
+         <html layout:decorate="~{layout}">
+           <div layout:fragment="content">
+             <!-- 여기에 복사 -->
+           </div>
+         </html>
+         ```
+
+      2. 이미지, 동영상 경로 일치
+
+   3. 전체 메뉴 링크 관련된 페이지 작업
+      1. 404.html
+      2. IntroController 클래스 생성, /intro/about GetMapping메서드 작성
+      3. templates/intro/about.html 생성
+      4. 동일하게 페이지 옮기기
+
+## 14일차
+
+### 스프링부트 Backboard 프로젝트(계속)
+
+1. 부트스트랩 프리테마 NiceSchool로 변경
+
+   1. 버튼 CSS 변경
+   2. `th:style="|background-image: url('@{/img/education/showcase-1.webp}')|"` 오류해결
+   3. About DB연동
+
+      1. 전체 내용 Entity
+      2. 역사 리스트용 Entity
+      3. AboutRepository
+      4. AboutService
+      5. IntroController를 수정
+      6. about.html 타임리프와 연동
+
+   4. 관리자(사용자)가 쉽게 데이터를 입력할 수 있는 화면 개발
+
+      1. layout.html 에 관리자 메뉴 추가
+      2. AdminController 생성 @GetMapping("/manage") 메서드 생성
+      3. /admin/manage.html을 board_detail.html 입력화면 작업
+
+      4. AdminController @PostMapping("/about") 메서드 생성
+      5. History 관련 리스트 및 입력화면 html 추가
+      6. AdminController @PostMapping("/history/{id}") 메서드 생성
+      7. HistoryRepository, HistoryService 생성 작성
+
+## 15일차
+
+### 스프링부트 Backboard 프로젝트(계속)
+
+1. 부트스트랩 프리테마 NiceSchool로 변경
+
+   1. 관리자 화면 history 수정 부분 완료
+
+      - AdminController에 히스토리 수정화면으로 넘어가는 GetMapping() 추가
+      - HistoryService 에 리포지토리에서 데이터 가져오는 메서드 추가
+      - HistoryRepository에 한건 가져오는 메서드 추가
+      - /admin/history.html 작성
+      - AdminController에 히스토리 수정가능한 PostMapping() 추가
+
+   2. 로그인한 관리자만 수정할 수 있도록
+      - `@PreAuthorize` 어노테이션으로 처리
+
+2. AWS Lightsale로 업로드
+
+   1. AWS 회원가입
+   2. LightSale
+      1. 인스턴스 생성
+      2. 리전 확인
+      3. Linux/Unix > OS전용 > Ubuntu 22.x 선택
+      4. 인스턴스 플랜 선택(90일 무료)
+      5. 인스턴스 이름 지정 > 생성버튼
+      6. 인스턴스 퍼블릭 고정 IP 주소 확인
+         <img src="./image/sb0181.png" width="700">
+   3. 네트워크
+
+      1. IPv4 방화벽 설정 : 9070 포트 오픈
+         <img src="./image/sb0180.png" width="700">
+
+   4. 인스턴스만 삭제하면 90일 이후 비용발생 안함
+
+   5. 외부 서버접속 SSH키 발급
+
+      1. 아이디 > 계정
+      2. SSH 키 탭 진입
+      3. 기본키를 다운로드. \*.pem
+
+   6. pem 을 ppk로 변경
+      1. PuTTYgen 실행 > Load > AWS에서 받은 키를 선택
+      2. Save private key로 PPK로 저장
+   7. PuTTY
+
+      1. PuTTY 터미널 툴 설치 : https://www.putty.org/
+      2. 실행
+      3. AWS 고정아이피 host에 입력
+      4. Connection > SSH > Auth > Credential > ppk 파일 선택
+      5. login as : ubuntu 입력 엔터
+
+   8. FTP : https://filezilla-project.org/
+
+      1. Client 설치
+      2. 사이트관리자 > 새 사이트
+         - 프로토콜, SFTP : SSH File Transfer Protocol로 변경
+         - 호스트 : AWS 퍼블릭 IP
+         - 로그온 유형 : 키 파일 선택
+         - 사용자 : Ubuntu
+         - 키파일 : _.pem / _.ppk 중 선택
+         - 연결
+
+   9. Ubuntu에 서버환경 설정
+
+      1. 현재 호스트명 ip-private_ip
+      2. hostnamectl 명령어로 변경
+
+         ```shell
+         > sudo hostnamectl set-hostname <변경할호스트명>
+         > sudo reboot
+         ```
+
+      3. 한국시간으로 변경
+
+         ```shell
+         > sudo ln -sf /usr/share/zoneinfo/Asia/Seoul /etc/localtime
+         ```
+
+      4. JDK 설치
+
+         ```shell
+         ~$ sudo apt update  // 1
+
+         ~$ sudo apt upgrade   // 나중에 필요할 때 업그레이드
+
+         ~$ java --version // 2
+
+         ~$ sudo apt install openjdk-17-jdk  // 3
+         Do you want to continue? [Y/n] y
+         No VM guests are running outdated hypervisor (qemu) binaries on this host.
+         ubuntu@hugomgsung:~$
+         ```
+
+      5. VS Code에서 jar파일 생성되도록 빌드
+
+         1. test 폴더 내 java파일의 @SpringbootTest @Test 부분 주석처리(빌드 오류)
+         2. **application.properties**, build.gradle을 배포할 내용으로 수정
+         3. Gradle for java > Tasks > build > build 먼저 처리
+         4. Gradle for java > Tasks > build > bootJar 실행
+         5. build/libs/\*SNAPSHOT.jar 파일 생성 확인
+
+      6. application.properties 설정
+
+         1. Ubuntu에 맞게 변경
+         2. build, bootJar 다시 수행
+
+      7. FTP로 배포
+
+         1. sbserver 폴더 생성
+         2. \*SNAPSHOP.jar 복사
+         3. 명령어로 실행
+
+            ```shell
+            ~$ java -jar backboard-1.0.2-SNAPSHOT.jar
+            ...
+            ```
+
+   10. 백그라운드에서 서버 실행 쉘 작성
+
+       1. nano start.sh 쉘 파일 생성.(반드시 Ubuntu에서 작성할 것)
+
+          ```shell
+          #!/bin/bash
+
+          JAR=backboard-1.0.2-SNAPSHOT.jar
+
+          nohup java -jar $JAR > /dev/null 2>&1 &
+          ```
+
+       2. nano stop.sh 쉘 작성
+
+          ```shell
+          #!/bin/bash
+
+          BB_PID=$(ps -ef | grep java | grep backboard | awk '{print $2}')
+
+          if [ -z "$BB_PID" ];
+          then
+              echo "BACKBOARD is not running"
+          else
+              kill -9 $BB_PID
+              echo "BACKBOARD terminated!"
+          fi
+          ```
+
+       3. chmod +x \*.sh 실행
+
+3. 추가오류 확인
+   1. admin/manage, intro/about 발생하는 내부서버(500) 오류 확인 수정
+
+## 16일차
+
+### 스프링부트 Backboard 프로젝트 (계속)
+
+1. 사용자 역할(Role) 추가
+
+   1. Member Entity에 MemberRole 추가
+   2. MemberService setMember() 에 컬럼값 입력 로직 추가
+   3. 권한이 필요한 페이지 컨트롤러 메서드에 preAuthorize 어노테이션 사용
+   4. MemberSecuritySerivce 에 로그인후 권한부여 로직 수정
+
+      ```java
+      if (member.getRole().equals(MemberRole.ADMIN)) {
+            authorities.add(new SimpleGrantedAuthority(MemberRole.ADMIN.getValue())); // ROLE_ADMIN
+      } else {
+          authorities.add(new SimpleGrantedAuthority(MemberRole.USER.getValue())); // ROLE_USER
+      }
+      ```
+
+2. 소셜로그인 OAuth2(Opne Authorization 2.0)
+
+   1. 의존성 추가
+      ```gradle
+      implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+      ```
+   2. SecurityConfig에 oauth2Login 설정
+   3. Google OAuth2 신청 : https://console.cloud.google.com/
+
+      1. 새 프로젝트 : 프로젝트 이름, 결제 계정 옵션, 조직 없음 > 만들기
+      2. API 및 서비스
+         1. OAuth 동의화면
+         2. 시작하기
+         3. 앱 이름 입력, 사용자 지원 이메일 본인 메일 선택 > 다음
+         4. 대상 외부 선택 > 다음
+         5. OAuth 클라이언트 만들기 버튼 활성화
+      3. OAuth 클라이언트 ID 만들기
+
+         1. 애플리케이션 유형 웹 애플리케이션 선택
+         2. 이름은 옵션
+         3. `승인된 리디렉션 URI` : 제일 중요!!!
+            - +URI 추가버튼 클릭
+            - http://localhost:9097/login/oauth2/code/google
+            - 만들기 클릭
+         4. 데이터 액세스
+            - 범위 추가 또는 삭제 버튼
+            - .../auth/userinfo.email, .../auth/userinfo.profile, openid 선택, 업데이트
+            - Save 버튼 클릭
+         5. Cloud 개요 > 대시보드 > API 개요 이동
+            - 사용자 인증정보
+            - 구글 클라이언트ID 복사
+            - 클라이언트 보안 비밀번호 Add Secret, 복사
+         6. 대상
+            - 테스트 사용자 등록
+            - 배포시 앱 게시를 눌러야
+
+      4. application.properties 구글 설정 추가
+      5. CustomOAuth2UserService 클래스 작성 loadUser() 오버라이드메서드 작성
+         - registrationid를 가져오는 부분까지 우선 작성
+      6. dto.OAuth2Reponse 인터페이스 생성
+      7. dto.GoogleResponse, NaverReponse 클래스를 따로 생성. 돌려받은 json의 구조가 다름
+
+         ```json
+         // 구글데이터
+         {
+             "resultcode": "00",
+             "message": "success",
+             "email" : "test@gmail.com",
+             "profile" : "...."
+             // ...
+         }
+
+         // 네이버데이터
+         {
+             "resultcode": "00",
+             "message": "success",
+             "response": {
+                 "email" : "test@naver.com",
+                 "nickname" : "Blah~~~",
+                 ///.. 생략
+                 "birthday" : "10-01"
+             }
+         }
+         ```
+
+      8. CustomOAuth2UserService 아래부분 완성
+      9. SecurityConfig에 CustomOAuth2UserService 를 추가
+      10. /member_signin.html에 소셜로그인 버튼 추가
+
+      11. Member Entity에 privder 추가
+      12. CustomOAuth2UserService oAuth2Reponse 이후 Member저장로직 추가
+      13. dto.MemberDto 생성
+      14. CustomOAuth2UserService Member 저장로직 이후 로그인 세션에 넣을 객체생성
+      15. dto.CustomOAuth2User 클래스 생성
+      16. CustomOAuth2UserService MemberDto 리턴부분 추가
+      17. CustomOAuth2User에 UserDetails 인터페이스 추가, 구현안된 메서드 추가 구현
+
+   <img src="./image/sb0022.png" width="700">
+
+## 17일차
+
+### 공공데이터 포털 OpenAPI 활용
+
+1. 새 프로젝트 생성
+
+   1. 명령 팔레트...(Ctrl + Shift + P)
+   2. Sprig Initializr: Create a Gradle Project...
+      1. Spring Boot version : 3.5.3
+      2. Java
+      3. Group Id : com.pknu
+      4. Artifial Id : openapi_demo
+      5. Packaging : Jar
+      6. Java version : 17
+      7. Spring Web, Spring Boot DevTools, Lombok, Thymeleaf
+      8. 경로 선택, 프로젝트 오픈
+
+2. application.properties 초기설정
+
+   ```properties
+   ## 서버포트
+   server.port=9099
+
+   ## 로그색상 변경
+   spring.output.ansi.enabled=always
+
+   ## 서버 자동재시작
+   spring.devtools.restart.enabled=true
+   spring.devtools.livereload.enabled=true
+   spring.devtools.restart.additional-paths=src/main/java
+
+   ## 커스텀 에러 관련
+   # 기본 Whitelabel Error Page 비활성화
+   server.error.whitelabel.enabled=true
+   ```
+
+3. 공공 데이터포털 - http://data.go.kr/
+
+   1. 회원가입 및 로그인
+   2. 부산광역시 부산맛집정보 서비스 활용 신청, 10분정도 소요
+
+   <img src="./image/sb0019.png" width="700">
+
+   3. 마이페이지 > 데이터활용 > Open API > 활용신청 현황
+   4. 계발계정 상세보기
+      - 일반 인증키(Encoding) 사용, 복사
+   5. 활용정보 상세기능 정보 > 원하는 서비스 미리보기 확인 클릭
+      - 서비스키 입력
+      - resultType 입력 후 미리보기 클릭
+   6. 미리보기
+
+   <img src="./image/sb0020.png" width="600">
+
+4. OpenAPI 호출 로직 구현
+
+   1. 패키지 생성
+
+      1. controller : 사용자 요청 진입점. 많은 로직이 들어가지 않고 동작만 정의
+      2. dto : 서버내에서 사용할 데이터를 주고받을 때
+      3. entity : DB에 저장될 테이블 정의. 데이터 전달할 때
+      4. repository : JPA등 DB에 저장할 때 필요한 인터페이스
+      5. service : 동작할 로직이 정의되어있을 실제 일할 부분
+
+   2. controller.RestaurantController 생성
+
+      - 기본 요청 RESTful URL GetMapping 메서드 생성
+
+   3. service.RestaurantService 생성
+
+      - fetchRestaurants() 메서드 작성
+
+   4. build.gradle JSON용 라이브러리 의존성 추가
+
+      ```groovy
+      // JSON 파싱 라이브러리
+      implementation 'com.fasterxml.jackson.core:jackson-databind'
+      ```
+
+   5. JSON 결과를 담을 모델클래스 생성
+
+      1. dto.Item 클래스
+      2. dto.FoodKrResponse 클래스
+
+   6. service.RestaurantService
+
+      - JSON 파싱 완료, 리턴 로직 추가
+
+   7. pageNo 콤보박스 추가 페이징 처리
+
+   8. Bootstrap 디자인 접목
+
+5. RestAPI 서비스
+
+   1. controller.RestaurantRestController 생성
+
+6. DB 저장
+
+   1. build.gradle 의존성 추가
+
+      ```groovy
+      // DB연동용 의존성
+      runtimeOnly 'com.oracle.database.jdbc:ojdbc11'   // 운영용 Oracle
+      implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+      ```
+
+   2. application.propertis DB, JPA 설정 추가
+   3. entity.ItemEntity 클래스 생성
+   4. repository.RestaurantRepository 생성
+   5. html 페이지에 저장버튼
+   6. 저장처리 로직 구현
+
+7. 나중에 추가해야할 부분
+   1. [x] 회원가입 후 바로 로그인되는 기능
+   2. [x] 로그인한 사람 표시기능
+   3. [x] 파일 업로드
+   4. [x] 부트스트랩 프리테마 NiceSchool로 변경
+   5. [ ] 파일사이즈 초과시 JS로 방지
+   6. [x] 구글로그인
+   7. [x] AWS 라이트세일 업로드
+   8. [ ] 게시글에 이미지 추가시 img 태그에 width="100%" 추가작업
+   9. [x] 사용자 정보에 Role 추가
+   10. [ ] Contact로 메일보내기
+   11. [ ] 공공데이터 포털 API 사용
